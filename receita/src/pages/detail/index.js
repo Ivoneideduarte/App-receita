@@ -1,24 +1,28 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     Pressable,
     ScrollView,
-    Image
+    Image,
+    Modal,
+    Share
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Entypo, AntDesign, Feather } from '@expo/vector-icons'
 
 import { Ingredients } from '../../components/ingredients';
 import { Instructions } from '../../components/instructions';
+import { VideoView } from '../../components/video';
 
 export function Detail() {
 
     const route = useRoute()
     const navigation = useNavigation()
-
     //console.log(route.params?.data)
+
+    const [showVideo, setShowVideo] = useState(false)
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -36,9 +40,25 @@ export function Detail() {
         })
     }, [navigation, route.params?.data])
 
+    function handleOpenvideo() {
+        setShowVideo(true)
+    }
+
+    async function shareReceipe() {
+        //console.log("compartilhar")
+        try{
+            await Share.share({
+                url: 'https://sujeitoprogramador.com',
+                message: `Receita: ${route.params?.data.name}\nIngredientes: ${route.params?.data.total_ingredients}\nVi lá no app receita fácil`
+            })
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 14 }} showsVerticalScrollIndicator={false}>
-            <Pressable>
+            <Pressable onPress={handleOpenvideo}>
                 <View style={styles.playIcon}>
                     <AntDesign name='playcircleo' size={50} color='#fafafa' />
                 </View>
@@ -53,7 +73,7 @@ export function Detail() {
                     <Text style={styles.title}>{route.params?.data.name}</Text>
                     <Text style={styles.ingredientsText}>ingredientes ({route.params?.data.total_ingredients})</Text>
                 </View>
-                <Pressable>
+                <Pressable onPress={shareReceipe}>
                     <Feather name='share-2' size={24} color='#121212' />
                 </Pressable>
             </View>
@@ -75,6 +95,12 @@ export function Detail() {
                 <Instructions key={item.id} data={item} index={index} />
             ))}
 
+            <Modal visible={showVideo} animationType='slide'>
+                <VideoView      
+                    handleClose={ () => setShowVideo(false) }
+                    videoUrl={route.params?.data.video}
+                />
+            </Modal>
 
         </ScrollView>
     );

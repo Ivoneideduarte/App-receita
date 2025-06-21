@@ -1,8 +1,7 @@
 import axios from 'axios'
 
 /*
- * Rodar com IPV4: json-server --watch db.json --delay 180 --host 192.168.100.11 db.json
- 
+ * Rodar com IPV4: json-server --watch db.json --delay 180 --host 192.168.100.11
  * 
  */
 
