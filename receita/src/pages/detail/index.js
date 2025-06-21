@@ -16,7 +16,7 @@ import { Ingredients } from '../../components/ingredients';
 import { Instructions } from '../../components/instructions';
 import { VideoView } from '../../components/video';
 
-import { isFavorites, saveFavorites, removeItem } from '../../../utils/storage';
+import { isFavorites, saveFavorites, removeItem } from '../../utils/storage';
 
 export function Detail() {
 
